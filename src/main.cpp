@@ -24,23 +24,24 @@ bool starts_with(const std::string& s, const char* p) {
 }
 
 void print_help() {
+	// TODO
 }
 
 void remove_comments(vector<string>& lines)
 {
-  for (auto l = lines.begin(); l != lines.end();) {
-	if (starts_with(*l, "#")) {
-		l = lines.erase(l);
+	for (auto l = lines.begin(); l != lines.end();) {
+		if (starts_with(*l, "#")) {
+			l = lines.erase(l);
+		}
+		else {
+			++l;
+		}
 	}
-	else {
-		++l;
-	}
-  }
 }
 
 struct pixel {
-	char fore = ' ';
-	char back = ' ';
+	char fore    = ' ';
+	char back    = ' ';
 	char content = ' ';
 };
 
@@ -132,53 +133,53 @@ void lines_to_screen(const vector<string>& lines, vector<vector<pixel>>& screen)
 }
 
 void print(const vector<vector<pixel>>& screen) {
-  char fore = ' ';
-  char back = ' ';
-  for (const auto& row : screen) {
-	for (const auto& pix : row) {
-	  const auto back_wo_bright = static_cast<char>(tolower(pix.back));
-	  if (back_wo_bright != back) {
-		switch (back_wo_bright) {
-		  case ' ': cout << back::reset;	break;
-		  case 'x': cout << back::black;	break;
-		  case 'r': cout << back::red;		break;
-		  case 'g': cout << back::green;	break;
-		  case 'y': cout << back::yellow;	break;
-		  case 'b': cout << back::blue;		break;
-		  case 'm': cout << back::magenta;	break;
-		  case 'c': cout << back::cyan;		break;
-		  case 'w': cout << back::white;	break;
-		  default:							break;
+	char fore = ' ';
+	char back = ' ';
+	for (const auto& row : screen) {
+		for (const auto& pix : row) {
+			const auto back_wo_bright = static_cast<char>(tolower(pix.back));
+			if (back_wo_bright != back) {
+				switch (back_wo_bright) {
+					case ' ': cout << back::reset;   break;
+					case 'x': cout << back::black;   break;
+					case 'r': cout << back::red;     break;
+					case 'g': cout << back::green;   break;
+					case 'y': cout << back::yellow;  break;
+					case 'b': cout << back::blue;    break;
+					case 'm': cout << back::magenta; break;
+					case 'c': cout << back::cyan;    break;
+					case 'w': cout << back::white;   break;
+					default:                         break;
+				}
+				back = back_wo_bright;
+			}
+			if (pix.fore != fore) {
+				char fore_wo_bright = pix.fore;
+				if (fore_wo_bright == ' ') {
+					cout << fore::reset;
+				}
+				else if (isupper(fore_wo_bright)) {
+					cout << fore::bright;
+					fore_wo_bright = static_cast<char>(tolower(fore_wo_bright));
+				}
+				switch (fore_wo_bright) {
+					case 'x': cout << fore::black;   break;
+					case 'r': cout << fore::red;     break;
+					case 'g': cout << fore::green;   break;
+					case 'y': cout << fore::yellow;  break;
+					case 'b': cout << fore::blue;    break;
+					case 'm': cout << fore::magenta; break;
+					case 'c': cout << fore::cyan;    break;
+					case 'w': cout << fore::white;   break;
+					default:                         break;
+				}
+				fore = pix.fore;
+			}
+			cout << pix.content;
 		}
-		back = back_wo_bright;
-	  }
-	  if (pix.fore != fore) {
-		char fore_wo_bright = pix.fore;
-		if (fore_wo_bright == ' ') {
-		  cout << fore::reset;
-		}
-		else if (isupper(fore_wo_bright)) {
-		  cout << fore::bright;
-		  fore_wo_bright = static_cast<char>(tolower(fore_wo_bright));
-		}
-		switch (fore_wo_bright) {
-		  case 'x': cout << fore::black;	break;
-		  case 'r': cout << fore::red;		break;
-		  case 'g': cout << fore::green;	break;
-		  case 'y': cout << fore::yellow;	break;
-		  case 'b': cout << fore::blue;		break;
-		  case 'm': cout << fore::magenta;	break;
-		  case 'c': cout << fore::cyan;		break;
-		  case 'w': cout << fore::white;	break;
-		  default:							break;
-		}
-		fore = pix.fore;
-	  }
-	  cout << pix.content;
+		cout << fore::reset << back::reset << endl;
+		fore = back = ' ';
 	}
-	cout << fore::reset << back::reset << endl;
-	fore = back = ' ';
-  }
 }
 
 void process(vector<string> lines) {
